@@ -307,6 +307,14 @@ app.get("/checkfile", (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("hello world at root");
+});
+
+app.get("/hello", (req, res) => {
+  res.send("hello world");
+});
+
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
