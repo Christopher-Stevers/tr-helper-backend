@@ -138,7 +138,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-app.use(cors());
+app.use(cors("https://tr-helper-next.vercel.app/"));
 
 // Express route to handle file processing
 
