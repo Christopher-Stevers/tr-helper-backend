@@ -138,7 +138,14 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://tr-helper-next.vercel.app", // Allow specific origin
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true, // Include credentials like cookies if needed
+  })
+);
 
 // Express route to handle file processing
 
