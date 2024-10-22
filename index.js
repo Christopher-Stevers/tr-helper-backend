@@ -73,10 +73,16 @@ function insertNewItem(rss, newItem) {
 }
 
 // Save the updated RSS feed
-function saveRss(filePath, rss) {
+function saveRss(comment, rss) {
+  const date = new Date(comment);
+  const month = date.toLocaleString("default", { month: "short" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const formattedFilePath = `annualaccess-${month}-${day}-${year}.xml`;
   const builder = new xml2js.Builder();
   const xml = builder.buildObject(rss);
-  fs.writeFileSync(filePath, xml);
+  fs.writeFileSync(formattedFilePath, xml);
+  return formattedFilePath;
 }
 
 async function updateXML(
@@ -102,11 +108,11 @@ async function updateXML(
     console.log("newItem", newItem);
     insertNewItem(rss, newItem);
     console.log("rss", rss);
-    saveRss(filePath, rss);
-    console.log("filePath", filePath);
-    console.log("New item added to the RSS feed.");
+
+    return saveRss(comment, rss);
   } catch (err) {
     console.error(`Error: ${err.message}`);
+    return xmlFilePath;
   }
 }
 
@@ -221,7 +227,7 @@ app.post(
       `${newFileName}-${randomString}${ext}`
     );
 
-    await updateXML(
+    const newXmlFilePath = await updateXML(
       xmlFilePath,
       duplicateFilePath,
       series,
@@ -291,6 +297,7 @@ app.post(
 
     res.json({
       message: "File processed successfully",
+      newXmlFilePath,
       newFilePath,
       previewFilePath,
       duplicateFilePath,
